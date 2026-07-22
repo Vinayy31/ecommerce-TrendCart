@@ -6,7 +6,7 @@ import {
   createProduct,
   deleteProduct,
   updateProduct,
-  
+
 } from "../controllers/productController.js";
 
 import {
@@ -17,8 +17,6 @@ import {
 const router = express.Router();
 
 
-// GET PRODUCTS
-
 router.get("/", getProducts);
 router.get("/:id", getProductById);
 
@@ -28,9 +26,6 @@ router.delete("/:id", deleteProduct);
 
 router.put("/:id", updateProduct);
 
-
-
-// CREATE PRODUCT (ADMIN ONLY)
 
 router.post(
   "/",

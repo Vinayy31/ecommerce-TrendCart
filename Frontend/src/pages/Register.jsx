@@ -1,222 +1,119 @@
-import React, {
-  useState,
-} from "react";
-
-import {
-  useNavigate,
-} from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import "./Register.css";
 
 function Register() {
+  const navigate = useNavigate();
 
-  const navigate =
-    useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [name, setName] =
-    useState("");
-
-  const [email, setEmail] =
-    useState("");
-
-  const [password, setPassword] =
-    useState("");
-
-
-  const submitHandler = async (
-    e
-  ) => {
-
+  const submitHandler = async (e) => {
     e.preventDefault();
 
     try {
+      const response = await fetch(
+        "http://localhost:4000/api/users/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+          }),
+        }
+      );
 
-      const response =
-        await fetch(
-          "http://localhost:4000/api/users/register",
-          {
-            method: "POST",
+      const data = await response.json();
 
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-
-            body: JSON.stringify({
-              name,
-              email,
-              password,
-            }),
-          }
-        );
-
-
-      const data =
-        await response.json();
-
-      alert(data.message);
-
-      navigate("/login");
-
+      if (response.ok) {
+        alert(data.message);
+        navigate("/login");
+      } else {
+        alert(data.message || "Registration Failed");
+      }
     } catch (error) {
-
       console.log(error);
-
       alert("Something went wrong");
     }
   };
 
-
   return (
-
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background:
-          "linear-gradient(to right, #7c3aed, #2563eb)",
-      }}
-    >
-
+    <div className="register-container">
       <form
+        className="register-form"
         onSubmit={submitHandler}
-        style={{
-          backgroundColor: "white",
-          padding: "40px",
-          width: "350px",
-          borderRadius: "15px",
-          boxShadow:
-            "0 5px 15px rgba(0,0,0,0.2)",
-          boxSizing: "border-box",
-        }}
       >
 
-        <h1
-          style={{
-            textAlign: "center",
-            marginBottom: "30px",
-            color: "#111827",
-          }}
-        >
+        <div className="register-logo">
+          🛒 TrendCart
+        </div>
+
+        <h1 className="register-title">
           Create Account
         </h1>
 
+        <p className="register-subtitle">
+          Join TrendCart and start shopping today
+        </p>
 
         <input
+          className="register-input"
           type="text"
-          placeholder="Enter Name"
+          placeholder="Enter Full Name"
           value={name}
           onChange={(e) =>
             setName(e.target.value)
           }
           required
-          style={{
-            width: "100%",
-            padding: "12px",
-            marginBottom: "20px",
-            borderRadius: "8px",
-            border:
-              "1px solid #ccc",
-            boxSizing:
-              "border-box",
-            fontSize: "15px",
-          }}
         />
 
-
         <input
+          className="register-input"
           type="email"
-          placeholder="Enter Email"
+          placeholder="Enter Email Address"
           value={email}
           onChange={(e) =>
             setEmail(e.target.value)
           }
           required
-          style={{
-            width: "100%",
-            padding: "12px",
-            marginBottom: "20px",
-            borderRadius: "8px",
-            border:
-              "1px solid #ccc",
-            boxSizing:
-              "border-box",
-            fontSize: "15px",
-          }}
         />
-
 
         <input
+          className="register-input"
           type="password"
-          placeholder="Enter Password"
+          placeholder="Create Password"
           value={password}
           onChange={(e) =>
-            setPassword(
-              e.target.value
-            )
+            setPassword(e.target.value)
           }
           required
-          style={{
-            width: "100%",
-            padding: "12px",
-            marginBottom: "20px",
-            borderRadius: "8px",
-            border:
-              "1px solid #ccc",
-            boxSizing:
-              "border-box",
-            fontSize: "15px",
-          }}
         />
 
-
         <button
+          className="register-btn"
           type="submit"
-          style={{
-            width: "100%",
-            padding: "12px",
-            backgroundColor:
-              "#7c3aed",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontSize: "16px",
-            fontWeight: "bold",
-            boxSizing:
-              "border-box",
-          }}
         >
-          Register
+          Create Account
         </button>
 
+        <p className="register-text">
+          Already have an account?
 
-        <p
-          style={{
-            textAlign: "center",
-            marginTop: "20px",
-            color: "#374151",
-          }}
-        >
-          Already have account?
-          {" "}
-
-          <a
-            href="/login"
-            style={{
-              color: "#2563eb",
-              textDecoration:
-                "none",
-              fontWeight: "bold",
-            }}
+          <Link
+            to="/login"
+            className="login-link"
           >
             Login
-          </a>
+          </Link>
 
         </p>
 
       </form>
-
     </div>
   );
 }

@@ -1,8 +1,5 @@
 import Order from "../models/orderModel.js";
 
-
-// PLACE ORDER
-
 const placeOrder = async (
   req,
   res
@@ -47,7 +44,7 @@ const placeOrder = async (
     });
   }
 };
-// GET ALL ORDERS
+
 
 const getOrders = async (
   req,
@@ -71,7 +68,6 @@ const getOrders = async (
 };
 
 
-// RETURN ORDER
 
 const approveReturn =
   async (req, res) => {
@@ -112,8 +108,6 @@ const approveReturn =
     }
   };
 
-
-// EXPORTS
 
 export {
   placeOrder,

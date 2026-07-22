@@ -1,347 +1,153 @@
-import React, {
-  useEffect,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
+import Navbar from "../components/NavBar";
+import "./Orders.css";
 
 function Orders() {
-
-  const [orders, setOrders] =
-    useState([]);
-
-  const [loading, setLoading] =
-    useState(true);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
-    fetch(
-      "http://localhost:4000/api/orders"
-    )
-
-      .then((res) =>
-        res.json()
-      )
-
+    fetch("http://localhost:4000/api/orders")
+      .then((res) => res.json())
       .then((data) => {
-
-        if (
-          Array.isArray(data)
-        ) {
-
-          setOrders(data);
-
-        } else {
-
-          setOrders([]);
-        }
-
+        setOrders(Array.isArray(data) ? data : []);
         setLoading(false);
       })
-
-      .catch((error) => {
-
-        console.log(error);
-
-        setLoading(false);
-      });
-
+      .catch(() => setLoading(false));
   }, []);
 
-  const returnOrder = async (
-    orderId
-  ) => {
-
+  const returnOrder = async (id) => {
     try {
-
-      const response =
-        await fetch(
-          `http://localhost:4000/api/orders/return/${orderId}`,
-          {
-            method: "PUT",
-          }
-        );
-
-      const data =
-        await response.json();
-
-      alert(
-        data.message
+      const response = await fetch(
+        `http://localhost:4000/api/orders/return/${id}`,
+        {
+          method: "PUT",
+        }
       );
+
+      const data = await response.json();
+
+      alert(data.message);
 
       window.location.reload();
-
-    } catch (error) {
-
-      console.log(error);
-
-      alert(
-        "Return Failed"
-      );
+    } catch (err) {
+      alert("Return Failed");
     }
   };
 
   if (loading) {
-
     return (
-
-      <h1
-        style={{
-          textAlign: "center",
-          marginTop: "50px",
-        }}
-      >
-        Loading...
-      </h1>
+      <>
+        <Navbar />
+        <h1 className="loading-text">Loading Orders...</h1>
+      </>
     );
   }
 
   return (
+    <>
+      <Navbar />
 
-    <div
-      style={{
-        padding: "40px",
-        backgroundColor: "#f3f4f6",
-        minHeight: "100vh",
-      }}
-    >
+      <div className="orders-container">
 
-      <h1
-        style={{
-          textAlign: "center",
-          marginBottom: "20px",
-          fontSize: "45px",
-        }}
-      >
-        Your Orders
-      </h1>
+        <h1 className="orders-title">
+          📦 My Orders
+        </h1>
 
-      <h2
-        style={{
-          textAlign: "center",
-          marginBottom: "40px",
-        }}
-      >
-        Total Orders:
-        {" "}
-        {orders.length}
-      </h2>
+        <p className="orders-count">
+          Total Orders : <strong>{orders.length}</strong>
+        </p>
 
-      {orders.length === 0 ? (
+        {orders.length === 0 ? (
+          <div className="empty-orders">
+            <h2>No Orders Found</h2>
+            <p>Your purchased products will appear here.</p>
+          </div>
+        ) : (
+          orders.map((order, index) => (
+            <div className="order-card" key={order._id}>
 
-        <h2
-          style={{
-            textAlign: "center",
-          }}
-        >
-          No Orders Found
-        </h2>
+              <div className="order-header">
 
-      ) : (
+                <h2>Order #{index + 1}</h2>
 
-        orders.map(
-          (
-            order,
-            index
-          ) => (
+                <span
+                  className={
+                    order.isReturned
+                      ? "status returned"
+                      : "status active"
+                  }
+                >
+                  {order.isReturned
+                    ? "Returned"
+                    : "Active"}
+                </span>
 
-            <div
-              key={order._id}
-              style={{
-                backgroundColor:
-                  "white",
-                padding: "25px",
-                borderRadius:
-                  "15px",
-                marginBottom:
-                  "30px",
-                boxShadow:
-                  "0 5px 15px rgba(0,0,0,0.1)",
-              }}
-            >
+              </div>
 
-              <h2
-                style={{
-                  color:
-                    "#2563eb",
-                  marginBottom:
-                    "20px",
-                }}
-              >
-                Order #{index + 1}
-              </h2>
+              <div className="order-info">
 
-              <p>
-                <strong>
-                  Name:
-                </strong>{" "}
-                {order.name ||
-                  order.user}
-              </p>
+                <p><strong>Name:</strong> {order.name}</p>
 
-              {order.phone && (
+                <p><strong>Phone:</strong> {order.phone}</p>
 
                 <p>
-                  <strong>
-                    Phone:
-                  </strong>{" "}
-                  {order.phone}
+                  <strong>Address:</strong>{" "}
+                  {order.shippingAddress}
                 </p>
 
-              )}
+                <p>
+                  <strong>Total:</strong> ₹
+                  {order.totalPrice}
+                </p>
 
-              <p>
-                <strong>
-                  Address:
-                </strong>{" "}
-                {typeof order.shippingAddress ===
-                "string"
-                  ? order.shippingAddress
-                  : order.shippingAddress?.address}
-              </p>
+              </div>
 
-              <p>
-                <strong>
-                  Total Price:
-                </strong>{" "}
-                ₹
-                {order.totalPrice}
-              </p>
-
-              <p>
-                <strong>
-                  Status:
-                </strong>{" "}
-                {order.isReturned
-                  ? "Returned ❌"
-                  : "Active ✅"}
-              </p>
-
-              {!order.isReturned && (
-
-                <button
-                  onClick={() =>
-                    returnOrder(
-                      order._id
-                    )
-                  }
-                  style={{
-                    backgroundColor:
-                      "#ef4444",
-                    color:
-                      "white",
-                    border:
-                      "none",
-                    padding:
-                      "10px 15px",
-                    borderRadius:
-                      "8px",
-                    cursor:
-                      "pointer",
-                    marginTop:
-                      "10px",
-                    marginBottom:
-                      "20px",
-                  }}
-                >
-                  Return Product
-                </button>
-
-              )}
-
-              <h3
-                style={{
-                  marginTop:
-                    "20px",
-                  marginBottom:
-                    "20px",
-                }}
-              >
+              <h3 className="product-heading">
                 Ordered Products
               </h3>
 
-              {order.orderItems &&
-              Array.isArray(
-                order.orderItems
-              ) ? (
+              {order.orderItems?.map((item, i) => (
+                <div
+                  key={i}
+                  className="order-product"
+                >
 
-                order.orderItems.map(
-                  (
-                    item,
-                    i
-                  ) => (
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                  />
 
-                    <div
-                      key={i}
-                      style={{
-                        display:
-                          "flex",
-                        alignItems:
-                          "center",
-                        gap: "20px",
-                        border:
-                          "1px solid #ddd",
-                        padding:
-                          "15px",
-                        borderRadius:
-                          "10px",
-                        marginBottom:
-                          "15px",
-                      }}
-                    >
+                  <div>
 
-                      <img
-                        src={
-                          item.image
-                        }
-                        alt={
-                          item.name
-                        }
-                        style={{
-                          width:
-                            "100px",
-                          height:
-                            "100px",
-                          objectFit:
-                            "cover",
-                          borderRadius:
-                            "10px",
-                        }}
-                      />
+                    <h3>{item.name}</h3>
 
-                      <div>
+                    <p>₹ {item.price}</p>
 
-                        <h2>
-                          {
-                            item.name
-                          }
-                        </h2>
+                    <p>Qty : {item.qty}</p>
 
-                        <h3>
-                          ₹
-                          {
-                            item.price
-                          }
-                        </h3>
+                  </div>
 
-                      </div>
+                </div>
+              ))}
 
-                    </div>
-                  )
-                )
-
-              ) : (
-
-                <p>
-                  No Products Found
-                </p>
-
+              {!order.isReturned && (
+                <button
+                  className="return-btn"
+                  onClick={() =>
+                    returnOrder(order._id)
+                  }
+                >
+                  Return Product
+                </button>
               )}
 
             </div>
-          )
-        )
-      )}
+          ))
+        )}
 
-    </div>
+      </div>
+    </>
   );
 }
 

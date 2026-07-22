@@ -1,62 +1,57 @@
-function ProductCard(props) {
-  return (
-    <div
-      style={{
-        width: "260px",
-        backgroundColor: "white",
-        borderRadius: "15px",
-        overflow: "hidden",
-        margin: "20px",
-        boxShadow: "0 4px 15px rgba(0,0,0,0.15)",
-        transition: "0.3s",
-      }}
-    >
-      <img
-        src={props.image}
-        alt="product"
-        style={{
-          width: "100%",
-          height: "250px",
-          objectFit: "cover",
-        }}
-      />
+import "./ProductCard.css";
 
-      <div style={{ padding: "15px" }}>
-        <h2
-          style={{
-            fontSize: "22px",
-            marginBottom: "10px",
-          }}
-        >
-          {props.name}
+function ProductCard({
+  image,
+  name,
+  price,
+  onAddToCart,
+}) {
+  return (
+    <div className="product-card">
+
+      <span className="discount-badge">
+        20% OFF
+      </span>
+
+      <span className="wishlist">
+        ❤
+      </span>
+
+      <div className="product-image-container">
+        <img
+          src={image}
+          alt={name}
+          className="product-image"
+        />
+      </div>
+
+      <div className="product-content">
+
+        <h2 className="product-name">
+          {name}
         </h2>
 
-        <p
-          style={{
-            fontSize: "20px",
-            color: "#2563eb",
-            fontWeight: "bold",
-          }}
-        >
-          ₹{props.price}
+        <div className="rating">
+          ⭐⭐⭐⭐⭐
+          <span>(4.8)</span>
+        </div>
+
+        <p className="product-price">
+          ₹{price}
+          <span className="old-price">
+            ₹{Math.round(price * 1.25)}
+          </span>
         </p>
 
         <button
-          style={{
-            width: "100%",
-            padding: "12px",
-            backgroundColor: "#111827",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            marginTop: "10px",
-            fontWeight: "bold",
-          }}
+          className="product-btn"
+          onClick={onAddToCart}
         >
-          Add To Cart
+          🛒 Add To Cart
         </button>
+
       </div>
+
     </div>
   );
 }

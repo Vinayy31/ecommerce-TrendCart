@@ -1,88 +1,93 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import "./Navbar.css";
 
 function Navbar() {
+  const navigate = useNavigate();
+
+  const [user, setUser] = useState(null);
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    setUser(userInfo);
+
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCartCount(cart.length);
+  }, []);
+
+  const logoutHandler = () => {
+    localStorage.removeItem("userInfo");
+    navigate("/login");
+    window.location.reload();
+  };
+
   return (
-    <div
-      style={{
-        backgroundColor: "#111827",
-        color: "white",
-        padding: "18px 40px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        position: "sticky",
-        top: "0",
-        zIndex: "1000",
-      }}
-    >
+    <nav className="navbar">
 
-      {/* LOGO */}
+      <Link to="/" className="logo">
+        🛒 <span>TrendCart</span>
+      </Link>
 
-      <h1
-        style={{
-          margin: 0,
-          fontSize: "32px",
-          fontWeight: "bold",
-          color: "#38bdf8",
-        }}
-      >
-        TrendCart
-      </h1>
+      <div className="nav-links">
 
-      {/* NAVIGATION BUTTONS */}
+        <Link to="/">Home</Link>
 
-      <div>
+        <Link to="/products">Products</Link>
 
         <Link to="/cart">
-          <button
-            style={{
-              backgroundColor: "white",
-              border: "none",
-              padding: "10px 18px",
-              borderRadius: "8px",
-              marginRight: "10px",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            Cart
-          </button>
+          Cart
+          {cartCount > 0 && (
+            <span className="cart-badge">
+              {cartCount}
+            </span>
+          )}
         </Link>
 
-        <Link to="/login">
-          <button
-            style={{
-              backgroundColor: "white",
-              border: "none",
-              padding: "10px 18px",
-              borderRadius: "8px",
-              marginRight: "10px",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            Login
-          </button>
-        </Link>
+        {user && (
+          <Link to="/orders">
+            Orders
+          </Link>
+        )}
 
-        <Link to="/register">
-          <button
-            style={{
-              backgroundColor: "#38bdf8",
-              color: "white",
-              border: "none",
-              padding: "10px 18px",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            Register
-          </button>
-        </Link>
+        {user?.isAdmin && (
+          <Link to="/admin">
+            Admin
+          </Link>
+        )}
+
+        {!user ? (
+          <>
+            <Link to="/login">
+              <button className="login-btn">
+                Login
+              </button>
+            </Link>
+
+            <Link to="/register">
+              <button className="register-btn">
+                Register
+              </button>
+            </Link>
+          </>
+        ) : (
+          <>
+            <span className="username">
+              Hi, {user.name}
+            </span>
+
+            <button
+              className="logout-btn"
+              onClick={logoutHandler}
+            >
+              Logout
+            </button>
+          </>
+        )}
 
       </div>
-    </div>
+
+    </nav>
   );
 }
 

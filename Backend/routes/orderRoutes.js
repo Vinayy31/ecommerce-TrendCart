@@ -7,13 +7,13 @@ import {
 
 const router = express.Router();
 
-// GET ALL ORDERS
+
 router.get("/", getOrders);
 
-// PLACE ORDER
+
 router.post("/", placeOrder);
 
-// APPROVE RETURN
+
 router.put("/return/:id", approveReturn);
 
 export default router;

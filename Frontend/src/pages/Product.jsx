@@ -1,259 +1,211 @@
-import React, {
-  useEffect,
-  useState,
-} from "react";
-
-import {
-  useNavigate,
-} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import "./Product.css";
 
 function Products() {
+  const navigate = useNavigate();
 
-  const navigate =
-    useNavigate();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const [products, setProducts] =
-    useState([]);
-
-  const [loading, setLoading] =
-    useState(true);
-
-
-  useEffect(() => { 
-
+  useEffect(() => {
     fetch("http://localhost:4000/api/products")
-
-      .then((res) =>
-        res.json()
-      )
-
+      .then((res) => res.json())
       .then((data) => {
-
         setProducts(data);
-
         setLoading(false);
       })
-
-      .catch((error) => {
-
-        console.log(error);
-
+      .catch((err) => {
+        console.log(err);
         setLoading(false);
       });
-
   }, []);
 
+  const filteredProducts = products.filter((product) => {
+    const matchSearch = product.name
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchCategory =
+      selectedCategory === "All"
+        ? true
+        : product.category.toLowerCase() ===
+          selectedCategory.toLowerCase();
+
+    return matchSearch && matchCategory;
+  });
+
+  const addToCart = (product) => {
+    const cartItems =
+      JSON.parse(localStorage.getItem("cart")) || [];
+
+    cartItems.push(product);
+
+    localStorage.setItem(
+      "cart",
+      JSON.stringify(cartItems)
+    );
+
+    alert("Product Added Successfully ✅");
+
+    navigate("/cart");
+  };
 
   if (loading) {
     return (
-      <h1
-        style={{
-          textAlign: "center",
-          marginTop: "100px",
-        }}
-      >
+      <h1 className="loading">
         Loading Products...
       </h1>
     );
   }
+
   return (
+    <div className="products-page">
 
-    <div
-      style={{
-        backgroundColor: "#f8fafc",
-        minHeight: "100vh",
-        padding: "30px",
-      }}
-    >
+      {/* Banner */}
 
-      {/* HEADER */}
+      <div className="products-header">
 
-      <div
-        style={{
-          background:
-            "linear-gradient(to right, #2563eb, #7c3aed)",
-          padding: "50px 20px",
-          borderRadius: "20px",
-          marginBottom: "40px",
-          color: "white",
-          textAlign: "center",
-        }}
-      >
+        <h1>🛍️ TrendCart Store</h1>
 
-        <h1
-          style={{
-            fontSize: "55px",
-            marginBottom: "10px",
-          }}
-        >
-          TrendCart
-        </h1>
-
-        <p
-          style={{
-            fontSize: "20px",
-          }}
-        >
-          Premium Shopping Experience
+        <p>
+          Explore Premium Products with Amazing Offers
         </p>
+
+        <div className="search-wrapper">
+
+          <span className="search-icon">🔍</span>
+
+          <input
+            type="text"
+            placeholder="Search for Mobiles, Shoes, Laptops..."
+            value={search}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+            className="search-box"
+          />
+
+        </div>
 
       </div>
 
+      {/* Category */}
 
-      {/* PRODUCTS */}
+      <div className="category-section">
 
-      {products.length === 0 ? (
+        <button onClick={() => setSelectedCategory("All")}>
+          All
+        </button>
 
-        <h2
-          style={{
-            textAlign: "center",
-          }}
-        >
-          No Products Found
+        <button onClick={() => setSelectedCategory("Electronics")}>
+          💻 Electronics
+        </button>
+
+        <button onClick={() => setSelectedCategory("Fashion")}>
+          👕 Fashion
+        </button>
+
+        <button onClick={() => setSelectedCategory("Shoes")}>
+          👟 Shoes
+        </button>
+
+        <button onClick={() => setSelectedCategory("Mobiles")}>
+          📱 Mobiles
+        </button>
+
+      </div>
+
+      {/* Product Count */}
+
+      <div className="products-count">
+        Showing <strong>{filteredProducts.length}</strong> Products
+      </div>
+
+      {filteredProducts.length === 0 ? (
+
+        <h2 className="no-products">
+          😔 No Products Found
         </h2>
 
       ) : (
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "30px",
-          }}
-        >
+        <div className="products-grid">
 
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
 
             <div
+              className="product-card"
               key={product._id}
-              style={{
-                backgroundColor: "white",
-                borderRadius: "18px",
-                overflow: "hidden",
-                boxShadow:
-                  "0 5px 20px rgba(0,0,0,0.1)",
-                transition: "0.3s",
-              }}
             >
 
-              <a
-                href={`/product/${product._id}`}
-                style={{
-                  textDecoration: "none",
-                  color: "black",
-                }}
+              <Link
+                to={`/product/${product._id}`}
+                className="product-link"
               >
 
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  style={{
-                    width: "100%",
-                    height: "250px",
-                    objectFit: "cover",
-                  }}
-                />
+                <div className="image-box">
 
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                  />
 
-                <div
-                  style={{
-                    padding: "20px",
-                  }}
-                >
-
-                  <p
-                    style={{
-                      color: "#2563eb",
-                      fontWeight: "bold",
-                      marginBottom: "5px",
-                    }}
-                  >
-                    {product.category}
-                  </p>
-
-
-                  <h2
-                    style={{
-                      fontSize: "24px",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    {product.name}
-                  </h2>
-
-
-                  <p
-                    style={{
-                      color: "#6b7280",
-                      marginBottom: "15px",
-                    }}
-                  >
-                    Brand:
-                    {" "}
-                    {product.brand}
-                  </p>
-
-
-                  <h3
-                    style={{
-                      color: "#111827",
-                      fontSize: "28px",
-                    }}
-                  >
-                    ₹ {product.price}
-                  </h3>
+                  <span className="discount-badge">
+                    20% OFF
+                  </span>
 
                 </div>
 
-              </a>
+                <div className="product-details">
 
+                  <span className="category">
+                    {product.category}
+                  </span>
 
-              <div
-                style={{
-                  padding: "0 20px 20px",
-                }}
+                  <h2>{product.name}</h2>
+
+                  <p className="brand">
+                    Brand : {product.brand}
+                  </p>
+
+                  <div className="rating-stock">
+
+                    <span className="rating">
+                      ⭐ 4.5
+                    </span>
+
+                    <span className="stock">
+                      {product.countInStock > 0
+                        ? "In Stock"
+                        : "Out of Stock"}
+                    </span>
+
+                  </div>
+
+                  <h3>₹ {product.price}</h3>
+
+                </div>
+
+              </Link>
+
+              <button
+                className="cart-btn"
+                onClick={() =>
+                  addToCart(product)
+                }
               >
-
-                <button
-                  onClick={() => {
-
-                    const cartItems =
-                      JSON.parse(
-                        localStorage.getItem("cart")
-                      ) || [];
-
-                    cartItems.push(product);
-
-                    localStorage.setItem(
-                      "cart",
-                      JSON.stringify(cartItems)
-                    );
-
-                    navigate("/cart");
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "14px",
-                    background:
-                      "linear-gradient(to right, #2563eb, #7c3aed)",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Add To Cart
-                </button>
-
-              </div>
+                🛒 Add To Cart
+              </button>
 
             </div>
+
           ))}
 
         </div>
+
       )}
 
     </div>

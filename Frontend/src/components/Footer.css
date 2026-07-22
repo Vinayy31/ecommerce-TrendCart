@@ -1,0 +1,155 @@
+.footer{
+    width:100%;
+    background:#111827;
+    color:white;
+    margin-top:70px;
+}
+
+.footer-container{
+    max-width:1400px;
+    margin:auto;
+    padding:50px 6%;
+}
+
+.footer-top{
+    display:flex;
+    justify-content:space-between;
+    gap:60px;
+    flex-wrap:wrap;
+}
+
+.footer-brand{
+    flex:2;
+    min-width:250px;
+}
+
+.footer-logo{
+    color:#38bdf8;
+    font-size:2rem;
+    margin-bottom:15px;
+}
+
+.footer-text{
+    color:#d1d5db;
+    line-height:1.8;
+    max-width:400px;
+}
+
+.footer-links,
+.footer-social{
+    flex:1;
+    min-width:180px;
+}
+
+.footer-links h3,
+.footer-social h3{
+    margin-bottom:18px;
+    color:#fff;
+}
+
+.footer-links a{
+    display:block;
+    color:#d1d5db;
+    text-decoration:none;
+    margin-bottom:12px;
+    transition:.3s;
+}
+
+.footer-links a:hover{
+    color:#38bdf8;
+    transform:translateX(5px);
+}
+
+.social-icons{
+    display:flex;
+    gap:15px;
+    margin-top:15px;
+}
+
+.social-icons a{
+    width:45px;
+    height:45px;
+    background:#1f2937;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    font-size:22px;
+    transition:.3s;
+}
+
+.social-icons a:hover{
+    background:#2563eb;
+    transform:translateY(-5px);
+}
+
+.footer-line{
+    border:none;
+    border-top:1px solid #374151;
+    margin:40px 0 20px;
+}
+
+.footer-copy{
+    text-align:center;
+    color:#9ca3af;
+    font-size:15px;
+}
+
+/* Tablet */
+
+@media(max-width:768px){
+
+.footer-top{
+    flex-direction:column;
+    text-align:center;
+    gap:40px;
+}
+
+.footer-brand{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.footer-text{
+    max-width:100%;
+}
+
+.footer-links a:hover{
+    transform:none;
+}
+
+.social-icons{
+    justify-content:center;
+}
+
+}
+
+/* Mobile */
+
+@media(max-width:480px){
+
+.footer-container{
+    padding:40px 20px;
+}
+
+.footer-logo{
+    font-size:28px;
+}
+
+.footer-text{
+    font-size:14px;
+}
+
+.footer-copy{
+    font-size:13px;
+}
+
+.social-icons a{
+    width:40px;
+    height:40px;
+    font-size:18px;
+}
+
+}

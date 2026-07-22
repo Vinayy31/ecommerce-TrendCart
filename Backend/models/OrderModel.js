@@ -1,8 +1,13 @@
 import mongoose from "mongoose";
 
 const orderSchema = mongoose.Schema(
-
   {
+    // Optional User
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+
     name: {
       type: String,
       required: true,
@@ -15,16 +20,42 @@ const orderSchema = mongoose.Schema(
 
     orderItems: [
       {
-        name: String,
-        qty: Number,
-        image: String,
-        price: Number,
+        // Optional Product
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+        },
+
+        name: {
+          type: String,
+          required: true,
+        },
+
+        qty: {
+          type: Number,
+          default: 1,
+        },
+
+        image: {
+          type: String,
+          required: true,
+        },
+
+        price: {
+          type: Number,
+          required: true,
+        },
       },
     ],
 
     shippingAddress: {
       type: String,
       required: true,
+    },
+
+    paymentMethod: {
+      type: String,
+      default: "Cash on Delivery",
     },
 
     totalPrice: {
@@ -42,15 +73,11 @@ const orderSchema = mongoose.Schema(
       default: false,
     },
   },
-
   {
     timestamps: true,
   }
 );
 
-const Order = mongoose.model(
-  "Order",
-  orderSchema
-);
+const Order = mongoose.model("Order", orderSchema);
 
 export default Order;

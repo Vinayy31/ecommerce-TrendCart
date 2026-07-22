@@ -1,8 +1,6 @@
 import Product from "../models/productModel.js";
 
 
-// GET ALL PRODUCTS
-
 const getProducts = async (req, res) => {
 
   try {
@@ -18,17 +16,6 @@ const getProducts = async (req, res) => {
     });
   }
 };
-
-// const productExites = await product.findOne({ name });
-
-// if (productExites) {
-//   console.log("Product already exists");
-//   return res.status(400).json({
-//     message: "Product already exists",
-//   })
-// }
-
-// CREATE PRODUCT
 
 const createProduct = async (req, res) => {
 
@@ -96,7 +83,6 @@ const getProductById = async (
     });
   }
 };
-//DELETE PRODUCT
 const deleteProduct = async (
   req,
   res
