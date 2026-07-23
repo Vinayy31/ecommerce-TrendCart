@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 
-// GENERATE JWT TOKEN
+
 
 const generateToken = (id, isAdmin) => {
 
@@ -20,8 +20,6 @@ const generateToken = (id, isAdmin) => {
 };
 
 
-// REGISTER USER
-
 const registerUser = async (req, res) => {
 
   try {
@@ -30,7 +28,7 @@ const registerUser = async (req, res) => {
 
     console.log("Register Request:", req.body);
 
-    // CHECK EMPTY FIELDS
+
 
     if (!name || !email || !password) {
 
@@ -39,7 +37,7 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // CHECK USER EXISTS
+   
 
     const userExists = await User.findOne({ email });
 
@@ -50,7 +48,7 @@ const registerUser = async (req, res) => {
       });
     }
 
-    // HASH PASSWORD
+ 
 
     const salt = await bcrypt.genSalt(10);
 
@@ -59,7 +57,7 @@ const registerUser = async (req, res) => {
     console.log("Original Password:", password);
     console.log("Hashed Password:", hashedPassword);
 
-    // CREATE USER
+
 
     const user = await User.create({
 
@@ -67,12 +65,12 @@ const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
 
-      // Default admin false
+      
       isAdmin: false,
 
     });
 
-    // SUCCESS RESPONSE
+
 
     res.status(201).json({
 
@@ -104,7 +102,6 @@ const registerUser = async (req, res) => {
 };
 
 
-// LOGIN USER
 
 const loginUser = async (req, res) => {
 
@@ -114,7 +111,7 @@ const loginUser = async (req, res) => {
 
     console.log("Login Request:", req.body);
 
-    // FIND USER
+    
 
     const user = await User.findOne({ email });
 
@@ -127,7 +124,7 @@ const loginUser = async (req, res) => {
       });
     }
 
-    // CHECK PASSWORD
+   
 
     const isMatch = await bcrypt.compare(
       password,
@@ -145,7 +142,6 @@ const loginUser = async (req, res) => {
       });
     }
 
-    // LOGIN SUCCESS
 
     res.status(200).json({
 

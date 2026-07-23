@@ -21,7 +21,7 @@ function Admin() {
   }, [navigate]);
 
   const fetchProducts = () => {
-    fetch("http://localhost:4000/api/products")
+    fetch(`${import.meta.env.VITE_API_URL}/api/products`)
       .then((res) => res.json())
       .then((data) => setProducts(data))
       .catch((err) => console.log(err));
@@ -31,7 +31,7 @@ function Admin() {
     if (!window.confirm("Delete this product?")) return;
 
     try {
-      await fetch(`http://localhost:4000/api/products/${id}`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`, {
         method: "DELETE",
       });
 
@@ -49,7 +49,7 @@ function Admin() {
     if (!newName || !newPrice) return;
 
     try {
-      await fetch(`http://localhost:4000/api/products/${product._id}`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/products/${product._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

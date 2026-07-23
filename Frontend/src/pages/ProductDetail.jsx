@@ -11,7 +11,7 @@ function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    fetch(`http://localhost:4000/api/products/${id}`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setProduct(data);
@@ -48,7 +48,7 @@ function ProductDetails() {
   const imageUrl =
     product.image.startsWith("http")
       ? product.image
-      : `http://localhost:4000${product.image}`;
+      : `${import.meta.env.VITE_API_URL}${product.image}`;
 
   return (
     <div className="product-page">

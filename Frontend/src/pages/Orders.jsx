@@ -7,7 +7,7 @@ function Orders() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/orders")
+    fetch(`${import.meta.env.VITE_API_URL}/api/orders`)
       .then((res) => res.json())
       .then((data) => {
         setOrders(Array.isArray(data) ? data : []);
@@ -19,7 +19,7 @@ function Orders() {
   const returnOrder = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/orders/return/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/orders/return/${id}`,
         {
           method: "PUT",
         }
